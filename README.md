@@ -39,7 +39,21 @@ add_filter("measure_kpis","myplugin_measure_kpis");
 * The plugin can be configured to combine data gathered at other sites. This can be done in two ways:
   * The plugin can go an ask the other sites for the current KPI values, using the REST API. This requires the other site to be publically visible on the Internet, which does not work for an intranet behind a firewall, etc.
   * The plugin on the remote site can be configured to send its KPIs nightly to a central location. The central location is also running an instance of the plugin.
-* Some types of KPIs represent just a number and can't be broken down further. An example would be `numberOfNewPagesPublished`, which would represent the number of new WordPress posts published in the last 34 hours. Some kinds of KPIs are interesting to break down, such as `pageViews`. In this case it is interesting to know the total number of page views, but also the number of pageViews of each page. In the first case, the code for the `measure_kpis` filter would look like above, and a single value would be placed by the function in the `$values` array. In the case where the KPI can be broken down, an array with the broken down values would be placed in the array indexed by a textual slug.
+* Some types of KPIs represent just a number and can't be broken down further. An example would be `numberOfNewPagesPublished`, which would represent the number of new WordPress posts published in the last 34 hours. Some kinds of KPIs are interesting to break down, such as `pageViews`. In this case it is interesting to know the total number of page views, but also the number of pageViews of each page. In the first case, the code for the `measure_kpis` filter would look like above, and a single value would be placed by the function in the `$values` array. In the case where the KPI can be broken down, an array with the broken down values would be placed in the array indexed by a textual slug. Something like below (the function `get_number_of_visitors_for_page` is imaginary):
+```
+function myplugin_measure_kpis($values) {
+	$vals=array();
+
+	foreach (get_pages() as $page)
+		$vals[$page->post_name]=get_number_of_visitors_for_page($page);
+
+	$kpis["itemsBought"]=$vals;
+
+	return $kpis;
+}
+
+add_filter("measure_kpis","myplugin_measure_kpis");
+```
 * The plugin hook can be implemented in the plugin generating the data that should be measured. In the case of Ubercart, it would mean that the hooks described above would actually be implemented in the Ubercart plugin. This might not be feasible, since it would require getting code commited to an existing and well established project. In this case, the implementation of the hooks could be done in a 3rd party plugin. So you would have:
   * `wp-data-kpis` - Responsible for querying the KPIs, storing them in the database and displaying them.
   * `ubercart` - A webshop. Generates a lot of interesting data.
