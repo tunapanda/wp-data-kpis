@@ -1,5 +1,5 @@
 # wp-data-kpis
-Measure various [http://searchcrm.techtarget.com/definition/key-performance-indicator](KPIs) related to a running WordPress site, and present them in a unified way.
+Measure various [KPIs](http://searchcrm.techtarget.com/definition/key-performance-indicator) related to a running WordPress site, and present them in a unified way.
 
 This is how the plugins is intended to work:
 
