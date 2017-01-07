@@ -32,7 +32,7 @@ function myplugin_measure_kpis($values) {
 
 add_filter("measure_kpis","myplugin_measure_kpis");
 ```
-* When gathering KPIs, the granularity of how to measure it is fixed and it is per day. It is not necesarily the only way to display the information. But the way that it is measuerd is always per day.
+* When gathering KPIs, the granularity of how to measure it is fixed and it is per day. It is not necessarily the only way to display the information. But the way that it is measured is always per day.
 * It is possible to create a "dashboard" or "data view". In order to create a data view, a number of KPIs are specified. The data view will the historical values of these KPIs as different charts. One line on the chart per KPI.
 * It is possible to create new KPIs by combining existing ones with an expression. For example, it would be possible to create the KPI `numberOfItemsBoughtPerVisitor` using the formula `itemsBought / numberOfVisitors`.
 * The plugin has a REST endpoint to deliver all the current values of all defined KPIs.
@@ -54,7 +54,7 @@ function myplugin_measure_kpis($values) {
 
 add_filter("measure_kpis","myplugin_measure_kpis");
 ```
-* The plugin hook can be implemented in the plugin generating the data that should be measured. In the case of Ubercart, it would mean that the hooks described above would actually be implemented in the Ubercart plugin. This might not be feasible, since it would require getting code commited to an existing and well established project. In this case, the implementation of the hooks could be done in a 3rd party plugin. So you would have:
+* The plugin hook can be implemented in the plugin generating the data that should be measured. In the case of Ubercart, it would mean that the hooks described above would actually be implemented in the Ubercart plugin. This might not be feasible, since it would require getting code committed to an existing and well established project. In this case, the implementation of the hooks could be done in a 3rd party plugin. So you would have:
   * `wp-data-kpis` - Responsible for querying the KPIs, storing them in the database and displaying them.
   * `ubercart` - A webshop. Generates a lot of interesting data.
   * `ubercart-data-kpis` - Implements the hooks to present the data from `ubercart` so that `wp-data-kpis` can understand them.
