@@ -40,7 +40,6 @@ class DataKpiPlugin extends Singleton {
 
 	/**
 	 * Measure the current state of the KPIs.
-	 * Untested!
 	 */
 	public function measureKpis() {
 		$kpis=array();
