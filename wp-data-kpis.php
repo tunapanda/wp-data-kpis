@@ -1,5 +1,4 @@
 <?php
-
 /*
 Plugin Name: Data KPIs
 Plugin URI: http://github.com/tunapanda/wp-data-kpis
@@ -14,7 +13,7 @@ define('DATAKPI_PATH',plugin_dir_path(__FILE__));
 define('DATAKPI_URL',plugins_url('',__FILE__));
 
 $autoLoader=new datakpi\AutoLoader("datakpi");
-$autoLoader->addSourcePath(DATAKPI_PATH."/src/plugin");
+$autoLoader->addSourceTree(DATAKPI_PATH."/src");
 $autoLoader->register();
 
-$plugin=new datakpi\DataKpiPlugin();
+datakpi\DataKpiPlugin::instance();
