@@ -16,4 +16,8 @@ $autoLoader=new datakpi\AutoLoader("datakpi");
 $autoLoader->addSourceTree(DATAKPI_PATH."/src");
 $autoLoader->register();
 
+$autoLoader=new datakpi\AutoLoader();
+$autoLoader->addSourcePath(DATAKPI_PATH."/ext/wprecord");
+$autoLoader->register();
+
 datakpi\DataKpiPlugin::instance();
