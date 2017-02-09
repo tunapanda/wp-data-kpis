@@ -12,10 +12,8 @@ class DefaultPluginKpis extends Singleton{
 	}
 
 	public function measure_posts_kpi($kpis){
-		$all_posts = wp_count_posts('post'); 
-		$kpis['posts'] = array(
-			'all_published_posts' => $all_posts->publish,
-		);
+		$all_posts = wp_count_posts('post');
+		$kpis['published_posts'] = floatval($all_posts->publish);
 		return $kpis;
 	}
 
