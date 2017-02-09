@@ -18,6 +18,7 @@ class WpCliController extends Singleton {
 			return;
 
 		WP_CLI::add_command("kpis measure",array($this,'measure'));
+		WP_CLI::add_command("kpis register", array($this, 'register'));
 	}
 
 	/**
@@ -25,5 +26,9 @@ class WpCliController extends Singleton {
 	 */
 	public function measure() {
 		DataKpiPlugin::instance()->measureKpis();
+	}
+
+	public function register(){
+		DataKpiPlugin::instance()->getAvailableKpis();
 	}
 }
