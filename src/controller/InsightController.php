@@ -101,7 +101,11 @@ class InsightController extends Singleton {
 
 		switch ($insight->getChartType()) {
 			case "number":
-				return "the_num_will_be_here";
+				$vals=$insight->getKpiValues();
+				if (sizeof($vals)!=1)
+					return "A number chart can only have one value.";
+
+				return $vals[0];
 				break;
 
 			default:

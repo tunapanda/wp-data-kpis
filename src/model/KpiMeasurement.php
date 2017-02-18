@@ -55,4 +55,22 @@ class KpiMeasurement extends WpRecord {
 	public function getKpi() {
 		return $this->kpi;
 	}
+
+	/**
+	 * Get the current kpi value from the database.
+	 */
+	public static function getCurrentKpiValue($kpiId) {
+		$measurement=KpiMeasurement::findOneByQuery(
+			"SELECT   * ".
+			"FROM     %t ".
+			"WHERE    kpi=%s ".
+			"ORDER BY timestamp DESC ".
+			"LIMIT 1",
+			$kpiId);
+
+		if ($measurement)
+			return $measurement->getValue();
+
+		return NULL;
+	}
 }
