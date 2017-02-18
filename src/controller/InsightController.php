@@ -46,6 +46,7 @@ class InsightController extends Singleton {
 		global $wpdb;
 
 		$kpiOptions=array();
+
 		$kpis=DataKpiPlugin::getAvailableKpis();
 		foreach ($kpis as $kpiId=>$kpiData)
 			$kpiOptions[$kpiId]=$kpiData["title"];

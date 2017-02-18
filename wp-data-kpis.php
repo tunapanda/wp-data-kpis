@@ -12,6 +12,11 @@ require_once __DIR__."/src/utils/AutoLoader.php";
 define('DATAKPI_PATH',plugin_dir_path(__FILE__));
 define('DATAKPI_URL',plugins_url('',__FILE__));
 
+if (!defined("RWMB_URL")) {
+	define("RWMB_URL",DATAKPI_URL."/ext/meta-box/");
+	require_once __DIR__."/ext/meta-box/meta-box.php";
+}
+
 $autoLoader=new datakpi\AutoLoader("datakpi");
 $autoLoader->addSourceTree(DATAKPI_PATH."/src");
 $autoLoader->register();
