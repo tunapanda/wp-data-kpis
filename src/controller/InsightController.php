@@ -18,7 +18,7 @@ class InsightController extends Singleton {
 		if (is_admin())
 			add_filter("rwmb_meta_boxes",array($this,'rwmbMetaBoxes'));
 
-		//add_filter("the_content",array($this,"theContent"));
+		add_filter("the_content",array($this,"theContent"));
 	}
 
 	/**
@@ -52,6 +52,24 @@ class InsightController extends Singleton {
 			$kpiOptions[$kpiId]=$kpiData["title"];
 
 		$metaBoxes[]=array(
+	        'title'      => 'Appearance',
+	        'post_types' => 'insight',
+	        'fields'     => array(
+	            array(
+	                'type' => 'select',
+	                'id'   => 'chartType',
+	                'name' => "Chart Type",
+	                'desc'=>"How should the insight be visualized?",
+	                'options'=>array(
+	                	"number"=>"Number",
+	                	"pie"=>"Pie Chart",
+	                	"line"=>"Line Chart"
+	                )
+	            ),
+	        ),
+		);
+
+		$metaBoxes[]=array(
 	        'title'      => 'KPIs',
 	        'post_types' => 'insight',
 	        'fields'     => array(
@@ -68,5 +86,29 @@ class InsightController extends Singleton {
 		);
 
 		return $metaBoxes;
+	}
+
+	/**
+	 * Implementation of the_content.
+	 */
+	public function theContent($content) {
+		$post=get_post();
+
+		if ($post->post_type!="insight")
+			return $content;
+
+		$insight=Insight::getById($post->ID);
+
+		switch ($insight->getChartType()) {
+			case "number":
+				return "the_num_will_be_here";
+				break;
+
+			default:
+				return "(unknown chart type: ".$insight->getChartType().")";
+				break;
+		}
+
+		return $content;
 	}
 }

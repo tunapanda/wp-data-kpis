@@ -67,7 +67,7 @@ abstract class PostTypeModel {
 		if ($post->post_type!=static::$posttype)
 			throw new Exception("Expected posttype: ".static::$posttype);
 
-		return new IssueFilter($post);
+		return new static($post);
 	}
 
 	/**
