@@ -97,7 +97,12 @@ class InsightController extends Singleton {
 		if ($post->post_type!="insight")
 			return $content;
 
-		wp_enqueue_style("wp-data-kpis",DATAKPI_URL."/wp-data-kpis.css");
+		wp_enqueue_style("wp-data-kpis",
+			DATAKPI_URL."/wp-data-kpis.css");
+
+		wp_enqueue_script("canvasjs",
+			DATAKPI_URL."/ext/canvasjs/jquery.canvasjs.min.js",
+			array("jquery"));
 
 		$insight=Insight::getById($post->ID);
 
@@ -117,10 +122,17 @@ class InsightController extends Singleton {
 
 			case "line":
 				$kpis=$insight->getKpis();
-				if (!$kpis)
-					return "No kpis selected for line chart.";
+				if (sizeof($kpis)!=1)
+					return "A line chart must have one value (for now).";
 
-				$insightContent="<pre>".print_r($kpis[0]->getHistoricalValues(),TRUE)."</pre>";
+				$firstKpi=$kpis[0];
+				$template=new Template(__DIR__."/../view/insight-line.php");
+				$data=array(
+					"uid"=>"data-kpi-line-chart-".uniqid(),
+					"title"=>$insight->getPost()->post_title,
+					"data"=>$firstKpi->getHistoricalValues(),
+				);
+				$insightContent=$template->render($data);
 				break;
 
 			default:
