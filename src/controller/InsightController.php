@@ -108,6 +108,13 @@ class InsightController extends Singleton {
 				return $vals[0];
 				break;
 
+			case "line":
+				$ids=$insight->getKpiIds();
+				$vals=KpiMeasurement::getHistoricalKpiValues($ids[0]);
+
+				return "hist: <pre>". print_r($vals,true)."</pre>";
+				break;
+
 			default:
 				return "(unknown chart type: ".$insight->getChartType().")";
 				break;

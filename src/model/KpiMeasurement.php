@@ -60,17 +60,58 @@ class KpiMeasurement extends WpRecord {
 	 * Get the current kpi value from the database.
 	 */
 	public static function getCurrentKpiValue($kpiId) {
-		$measurement=KpiMeasurement::findOneByQuery(
-			"SELECT   * ".
-			"FROM     %t ".
-			"WHERE    kpi=%s ".
-			"ORDER BY timestamp DESC ".
-			"LIMIT 1",
-			$kpiId);
+		global $wpdb;
 
-		if ($measurement)
-			return $measurement->getValue();
+		$val=$wpdb->get_var($wpdb->prepare(
+				"SELECT   value ".
+				"FROM     {$wpdb->prefix}kpimeasurement ".
+				"WHERE    kpi=%s ".
+				"ORDER BY timestamp DESC ".
+				"LIMIT 1",
+				$kpiId
+			));
 
-		return NULL;
+		if ($wpdb->last_error)
+			throw new Exception($wpdb->last_error);
+
+		return $val;
+	}
+
+	/**
+	 * Get a 30 day history of the measured kpi values from the database.
+	 * Will return an array where the value at index 0 is the oldest value,
+	 * and the value at index 29 is the current value.
+	 */
+	public static function getHistoricalKpiValues($kpiId) {
+		global $wpdb;
+
+		$rows=$wpdb->get_results($wpdb->prepare(
+				"SELECT   day,avg(value) AS value ".
+				"FROM     {$wpdb->prefix}kpimeasurement ".
+				"WHERE    kpi=%s ".
+				"GROUP BY day",
+				$kpiId
+			),ARRAY_A);
+
+		if ($wpdb->last_error)
+			throw new Exception($wpdb->last_error);
+
+		$valueByDay=array();
+		foreach ($rows as $row)
+			$valueByDay[$row["day"]]=$row["value"];
+
+		$t=time();
+		$res=array();
+		for ($i=0; $i<30; $i++) {
+			$day=date("Y-m-d",$t-(29-$i)*60*60*24);
+
+			if (isset($valueByDay[$day]))
+				$res[]=$valueByDay[$day];
+
+			else
+				$res[]=NULL;
+		}
+
+		return $res;
 	}
 }
