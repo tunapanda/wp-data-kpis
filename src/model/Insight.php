@@ -8,6 +8,7 @@ namespace datakpi;
 class Insight extends PostTypeModel {
 
 	protected static $posttype="insight";
+	private $kpis;
 
 	/**
 	 * Get the type of insight.
@@ -17,22 +18,16 @@ class Insight extends PostTypeModel {
 	}
 
 	/**
-	 * Get kpi ids.
+	 * Return an array of Kpi objects.
 	 */
-	public function getKpiIds() {
-		return $this->getMeta("kpis");
-	}
+	public function getKpis() {
+		if (!is_array($this->kpis)) {
+			$this->kpis=array();
+			$ids=$this->getMeta("kpis");
+			foreach ($ids as $id)
+				$this->kpis[]=new Kpi($id);
+		}
 
-	/**
-	 * Get kpi values.
-	 */
-	public function getKpiValues() {
-		$ids=$this->getKpiIds();
-		$vals=array();
-
-		foreach ($ids as $id)
-			$vals[]=KpiMeasurement::getCurrentKpiValue($id);
-
-		return $vals;
+		return $this->kpis;
 	}
 }

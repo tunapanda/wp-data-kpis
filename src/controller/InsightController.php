@@ -101,18 +101,19 @@ class InsightController extends Singleton {
 
 		switch ($insight->getChartType()) {
 			case "number":
-				$vals=$insight->getKpiValues();
-				if (sizeof($vals)!=1)
+				$kpis=$insight->getKpis();
+				if (sizeof($kpis)!=1)
 					return "A number chart can only have one value.";
 
-				return $vals[0];
+				return $kpis[0]->getCurrentValue();
 				break;
 
 			case "line":
-				$ids=$insight->getKpiIds();
-				$vals=KpiMeasurement::getHistoricalKpiValues($ids[0]);
+				$kpis=$insight->getKpis();
+				if (!$kpis)
+					return "No kpis selected for line chart.";
 
-				return "hist: <pre>". print_r($vals,true)."</pre>";
+				return "hist: <pre>".print_r($kpis[0]->getHistoricalValues(),TRUE)."</pre>";
 				break;
 
 			default:
