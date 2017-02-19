@@ -97,6 +97,8 @@ class InsightController extends Singleton {
 		if ($post->post_type!="insight")
 			return $content;
 
+		wp_enqueue_style("wp-data-kpis",DATAKPI_URL."/wp-data-kpis.css");
+
 		$insight=Insight::getById($post->ID);
 
 		switch ($insight->getChartType()) {
@@ -105,7 +107,12 @@ class InsightController extends Singleton {
 				if (sizeof($kpis)!=1)
 					return "A number chart can only have one value.";
 
-				return $kpis[0]->getCurrentValue();
+				$firstKpi=$kpis[0];
+				$template=new Template(__DIR__."/../view/insight-number.php");
+				$data=array(
+					"value"=>$firstKpi->getCurrentValue()
+				);
+				$insightContent=$template->render($data);
 				break;
 
 			case "line":
@@ -113,14 +120,20 @@ class InsightController extends Singleton {
 				if (!$kpis)
 					return "No kpis selected for line chart.";
 
-				return "hist: <pre>".print_r($kpis[0]->getHistoricalValues(),TRUE)."</pre>";
+				$insightContent="<pre>".print_r($kpis[0]->getHistoricalValues(),TRUE)."</pre>";
 				break;
 
 			default:
-				return "(unknown chart type: ".$insight->getChartType().")";
+				$insightContent="(unknown chart type: ".$insight->getChartType().")";
 				break;
 		}
 
-		return $content;
+		$template=new Template(__DIR__."/../view/insight.php");
+		$data=array(
+			"title"=>$insight->getPost()->post_title,
+			"content"=>$insightContent
+		);
+
+		return $template->render($data);
 	}
 }

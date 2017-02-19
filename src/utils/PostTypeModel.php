@@ -19,6 +19,13 @@ abstract class PostTypeModel {
 	}
 
 	/**
+	 * Get post.
+	 */
+	public function getPost() {
+		return $this->post;
+	}
+
+	/**
 	 * Get meta.
 	 */
 	public function getMeta($key) {

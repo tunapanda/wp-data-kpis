@@ -1,0 +1,28 @@
+.data-kpi-insight {
+	background: #eee;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	height: 200px;
+	/*width: 33%;*/
+}
+
+.data-kpi-insight .header {
+	background: #ccc;
+	border-radius: 5px 5px 0 0;
+	border-bottom: 1px solid #ccc;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.data-kpi-insight .content {
+	height: 100%;
+	margin: 10px;
+}
+
+.data-kpi-insight .number {
+	font-size: 80px;
+	font-family: "sans-serif";
+	text-align: center;
+	font-weight: bold;
+}
