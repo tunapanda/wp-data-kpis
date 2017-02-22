@@ -25,7 +25,7 @@ class Insight extends PostTypeModel {
 			$this->kpis=array();
 			$ids=$this->getMeta("kpis");
 			foreach ($ids as $id)
-				$this->kpis[]=new Kpi($id);
+				$this->kpis[]=Kpi::getById($id);
 		}
 
 		return $this->kpis;

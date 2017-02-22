@@ -18,17 +18,49 @@ class WpCliController extends Singleton {
 			return;
 
 		WP_CLI::add_command("kpis measure",array($this,'measure'));
-		WP_CLI::add_command("kpis register", array($this, 'register'));
+		WP_CLI::add_command("kpis list", array($this, 'list'));
+		WP_CLI::add_command("kpis peek", array($this, 'peek'));
 	}
 
 	/**
-	 * Measure KPIs.
+	 * Measure current values of the kpis and save to the database.
 	 */
 	public function measure() {
 		DataKpiPlugin::instance()->measureKpis();
+
+		WP_CLI::success("Kpis measured");
 	}
 
-	public function register(){
-		DataKpiPlugin::instance()->getAvailableKpis();
+	/**
+	 * List available kpis registered with the system.
+	 */
+	public function list(){
+		$kpis=DataKpiPlugin::instance()->getAvailableKpis();
+		$items=array();
+
+		foreach ($kpis as $kpi)
+			$items[]=array(
+				"id"=>$kpi->getId(),
+				"title"=>$kpi->getTitle(),
+				"value"=>$kpi->getStoredValue()
+			);
+
+		WP_CLI\Utils\format_items("table",$items,array("id","title","value"));
+	}
+
+	/**
+	 * Peek at the current values, but don't store anything.
+	 */
+	public function Peek(){
+		$kpis=DataKpiPlugin::instance()->getAvailableKpis();
+
+		foreach ($kpis as $kpi)
+			$items[]=array(
+				"id"=>$kpi->getId(),
+				"title"=>$kpi->getTitle(),
+				"value"=>$kpi->getCurrentMeasurement()
+			);
+
+		WP_CLI\Utils\format_items("table",$items,array("id","title","value"));
 	}
 }

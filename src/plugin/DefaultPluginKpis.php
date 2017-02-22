@@ -10,17 +10,16 @@ class DefaultPluginKpis extends Singleton{
 	 * Constructor.
 	 */
 	public function __construct(){
-		add_filter('measure_kpis', array($this, 'measure_posts_kpi'));
 		add_filter('register_kpis', array($this, 'register_posts_kpi'));
 	}
 
 	/**
-	 * Implementation of the measure_kpis filter.
+	 * Measure published posts.
 	 */
-	public function measure_posts_kpi($kpis){
-		$all_posts = wp_count_posts('post');
-		$kpis['published_posts'] = floatval($all_posts->publish);
-		return $kpis;
+	public function measurePublishedPosts() {
+		$count=wp_count_posts('post');
+
+		return $count->publish;
 	}
 
 	/**
@@ -28,7 +27,8 @@ class DefaultPluginKpis extends Singleton{
 	 */
 	public function register_posts_kpi($kpis){
 		$kpis['published_posts']=array(
-			"title"=>"Published Posts"
+			"title"=>"Published Posts",
+			"measure_func"=>array($this,"measurePublishedPosts")
 		);
 
 		return $kpis;

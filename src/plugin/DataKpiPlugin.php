@@ -26,9 +26,7 @@ class DataKpiPlugin extends Singleton {
 	 * Get available KPI:s.
 	 */
 	public function getAvailableKpis() {
-		$kpis=array();
-		$kpis=apply_filters("register_kpis",$kpis);
-		return $kpis;
+		return Kpi::getAllAvailable();
 	}
 
 	/**
@@ -42,15 +40,8 @@ class DataKpiPlugin extends Singleton {
 	 * Measure the current state of the KPIs.
 	 */
 	public function measureKpis() {
-		$kpis=array();
-		$kpis=apply_filters("measure_kpis",$kpis);
-
-		foreach ($kpis as $kpi=>$value) {
-			$measurement=new KpiMeasurement();
-			$measurement->setValue($value);
-			$measurement->setKpi($kpi);
-			$measurement->save();
-		}
+		foreach (Kpi::getAllAvailable() as $kpi)
+			$kpi->measureAndStore();
 	}
 
 	/**

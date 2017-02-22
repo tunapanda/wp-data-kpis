@@ -48,8 +48,8 @@ class InsightController extends Singleton {
 		$kpiOptions=array();
 
 		$kpis=DataKpiPlugin::getAvailableKpis();
-		foreach ($kpis as $kpiId=>$kpiData)
-			$kpiOptions[$kpiId]=$kpiData["title"];
+		foreach ($kpis as $kpi)
+			$kpiOptions[$kpi->getId()]=$kpi->getTitle();
 
 		$metaBoxes[]=array(
 	        'title'      => 'Appearance',
