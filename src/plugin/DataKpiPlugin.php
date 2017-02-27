@@ -20,6 +20,7 @@ class DataKpiPlugin extends Singleton {
 
 		InsightController::instance();
 		WpCliController::instance();
+		TestController::instance();
 	}
 
 	/**
