@@ -42,7 +42,7 @@ class TestController extends Singleton {
 				"color"=>$colors[$i%sizeof($colors)],
 			);
 
-		$widthByNum=array(2=>"50%",3=>"33%",4=>"25%");
+		$widthByNum=array(1=>"100%",2=>"50%",3=>"33%",4=>"25%");
 
 		$template=new Template(__DIR__."/../view/insight-line.php");
 		$insightContent=$template->render(array(
