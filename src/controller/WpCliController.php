@@ -18,8 +18,8 @@ class WpCliController extends Singleton {
 			return;
 
 		WP_CLI::add_command("kpis measure",array($this,'measure'));
-		WP_CLI::add_command("kpis list", array($this, 'list'));
-		WP_CLI::add_command("kpis peek", array($this, 'peek'));
+		WP_CLI::add_command("kpis list", array($this, 'listKpis'));
+		WP_CLI::add_command("kpis peek", array($this, 'peekKpis'));
 	}
 
 	/**
@@ -34,7 +34,7 @@ class WpCliController extends Singleton {
 	/**
 	 * List available kpis registered with the system.
 	 */
-	public function list(){
+	public function listKpis(){
 		$kpis=DataKpiPlugin::instance()->getAvailableKpis();
 		$items=array();
 
@@ -51,7 +51,7 @@ class WpCliController extends Singleton {
 	/**
 	 * Peek at the current values, but don't store anything.
 	 */
-	public function Peek(){
+	public function peekKpis(){
 		$kpis=DataKpiPlugin::instance()->getAvailableKpis();
 
 		foreach ($kpis as $kpi)
