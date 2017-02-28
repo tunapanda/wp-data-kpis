@@ -71,6 +71,13 @@ class Kpi {
 	}
 
 	/**
+	 * Has this KPI been measured today?
+	 */
+	public function isMeasuredToday() {
+		return KpiMeasurement::isKpiMeasuredToday($this->id);
+	}
+
+	/**
 	 * Measure the current value, and store in the database.
 	 */
 	public function measureAndStore() {

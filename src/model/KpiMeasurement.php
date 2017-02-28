@@ -57,6 +57,30 @@ class KpiMeasurement extends WpRecord {
 	}
 
 	/**
+	 * Has this kpi been measured today.
+	 */
+	public static function isKpiMeasuredToday($kpiId) {
+		global $wpdb;
+
+		$day=$wpdb->get_var($wpdb->prepare(
+				"SELECT   day ".
+				"FROM     {$wpdb->prefix}kpimeasurement ".
+				"WHERE    kpi=%s ".
+				"ORDER BY timestamp DESC ".
+				"LIMIT 1",
+				$kpiId
+			));
+
+		if ($wpdb->last_error)
+			throw new Exception($wpdb->last_error);
+
+		if ($day==date("Y-m-d"))
+			return TRUE;
+
+		return FALSE;
+	}
+
+	/**
 	 * Get the current kpi value from the database.
 	 */
 	public static function getCurrentKpiValue($kpiId) {

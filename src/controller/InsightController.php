@@ -129,6 +129,11 @@ class InsightController extends Singleton {
 	 * Render an insight. Returns the HTML;
 	 */
 	private function renderInsight($insight) {
+		$kpis=$insight->getKpis();
+		foreach ($kpis as $kpi)
+			if (!$kpi->isMeasuredToday())
+				$kpi->measureAndStore();
+
 		wp_enqueue_style("wp-data-kpis",
 			DATAKPI_URL."/wp-data-kpis.css");
 
