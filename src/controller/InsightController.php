@@ -20,6 +20,16 @@ class InsightController extends Singleton {
 
 		add_filter("the_content",array($this,"theContent"));
 		add_filter("template_include",array($this,"handleTemplateInclude"));
+
+		add_shortcode("insight",array($this,"handleInsightShortcode"));
+	}
+
+	/**
+	 * Handle the insight shortcode.
+	 */
+	public function handleInsightShortcode($args) {
+		$insight=Insight::getById($args["id"]);
+		return $this->renderInsight($insight);
 	}
 
 	/**
@@ -111,14 +121,20 @@ class InsightController extends Singleton {
 		if ($post->post_type!="insight")
 			return $content;
 
+		$insight=Insight::getById($post->ID);
+		return $this->renderInsight($insight);
+	}
+
+	/**
+	 * Render an insight. Returns the HTML;
+	 */
+	private function renderInsight($insight) {
 		wp_enqueue_style("wp-data-kpis",
 			DATAKPI_URL."/wp-data-kpis.css");
 
 		wp_enqueue_script("canvasjs",
 			DATAKPI_URL."/ext/canvasjs/jquery.canvasjs.min.js",
 			array("jquery"));
-
-		$insight=Insight::getById($post->ID);
 
 		switch ($insight->getChartType()) {
 			case "histogram":
