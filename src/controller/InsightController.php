@@ -61,9 +61,8 @@ class InsightController extends Singleton {
 	                'name' => "Chart Type",
 	                'desc'=>"How should the insight be visualized?",
 	                'options'=>array(
-	                	"number"=>"Number",
+	                	"histogram"=>"Current values and histogram",
 	                	"pie"=>"Pie Chart",
-	                	"line"=>"Line Chart"
 	                )
 	            ),
 	        ),
@@ -107,20 +106,7 @@ class InsightController extends Singleton {
 		$insight=Insight::getById($post->ID);
 
 		switch ($insight->getChartType()) {
-			case "number":
-				$kpis=$insight->getKpis();
-				if (sizeof($kpis)!=1)
-					return "A number chart can only have one value.";
-
-				$firstKpi=$kpis[0];
-				$template=new Template(__DIR__."/../view/insight-number.php");
-				$data=array(
-					"value"=>$firstKpi->getCurrentValue()
-				);
-				$insightContent=$template->render($data);
-				break;
-
-			case "line":
+			case "histogram":
 				$kpis=$insight->getKpis();
 				if (!sizeof($kpis))
 					return "A line chart must have at least one value.";
@@ -139,7 +125,7 @@ class InsightController extends Singleton {
 					);
 				}
 
-				$template=new Template(__DIR__."/../view/insight-line.php");
+				$template=new Template(__DIR__."/../view/insight-histogram.php");
 				$insightContent=$template->render(array(
 					"uid"=>"data-kpi-line-chart-".uniqid(),
 					"title"=>$insight->getPost()->post_title,
