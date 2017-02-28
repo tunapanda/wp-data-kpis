@@ -19,6 +19,21 @@ class InsightController extends Singleton {
 			add_filter("rwmb_meta_boxes",array($this,'rwmbMetaBoxes'));
 
 		add_filter("the_content",array($this,"theContent"));
+		add_filter("template_include",array($this,"handleTemplateInclude"));
+	}
+
+	/**
+	 * Handle template_include. Make sure we use the page-template for
+	 * pages, not the page-template for posts. This code doesn't seem
+	 * to work. Don't know why... :(
+	 */
+	public function handleTemplateInclude($template) {
+		$post_type=get_post_type();
+
+		if ($post_type=="insight")
+			$template=get_page_template();
+
+		return $template;
 	}
 
 	/**
@@ -123,6 +138,21 @@ class InsightController extends Singleton {
 						"historicalValues"=>$kpi->getHistoricalValues(),
 						"color"=>$colors[$i%sizeof($colors)],
 					);
+
+					if (sizeof($kpi->getHistoricalValues())!=30)
+						throw new Exception("Expected 30 and exactly 30 values, got: ".
+							sizeof($kpi->getHistoricalValues()));
+				}
+
+				$days=array();
+				$now=time();
+				for ($i=29; $i>=0; $i--) {
+					$t=$now-24*60*60*$i;
+					$days[]=array(
+						"y"=>date("Y",$t),
+						"m"=>date("m",$t)-1,
+						"d"=>date("d",$t)
+					);
 				}
 
 				$template=new Template(__DIR__."/../view/insight-histogram.php");
@@ -130,7 +160,8 @@ class InsightController extends Singleton {
 					"uid"=>"data-kpi-line-chart-".uniqid(),
 					"title"=>$insight->getPost()->post_title,
 					"kpis"=>$kpiData,
-					"entryWidth"=>$widthByNum[$num]
+					"entryWidth"=>$widthByNum[$num],
+					"days"=>$days
 				));
 				break;
 
