@@ -34,7 +34,7 @@
 							dataPoints: [
 								<?php foreach ($kpi["historicalValues"] as $index=>$value) { ?>
 									{
-										x: <?php echo $index; ?>,
+										x: new Date(2012, 00, <?php echo $index+1; ?>),
 										y: <?php echo $value?$value:"null"; ?>
 									},
 								<?php } ?>

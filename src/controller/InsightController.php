@@ -122,17 +122,30 @@ class InsightController extends Singleton {
 
 			case "line":
 				$kpis=$insight->getKpis();
-				if (sizeof($kpis)!=1)
-					return "A line chart must have one value (for now).";
+				if (!sizeof($kpis))
+					return "A line chart must have at least one value.";
 
-				$firstKpi=$kpis[0];
+				$widthByNum=array(1=>"100%",2=>"50%",3=>"33%",4=>"25%");
+				$colors=array("#f00","#0f0","#00f","#ff0","#f0f","0ff");
+				$num=sizeof($kpis);
+
+				$kpiData=array();
+				foreach ($kpis as $i=>$kpi) {
+					$kpiData[]=array(
+						"name"=>$kpi->getTitle(),
+						"currentValue"=>$kpi->getStoredValue(),
+						"historicalValues"=>$kpi->getHistoricalValues(),
+						"color"=>$colors[$i%sizeof($colors)],
+					);
+				}
+
 				$template=new Template(__DIR__."/../view/insight-line.php");
-				$data=array(
+				$insightContent=$template->render(array(
 					"uid"=>"data-kpi-line-chart-".uniqid(),
 					"title"=>$insight->getPost()->post_title,
-					"data"=>$firstKpi->getHistoricalValues(),
-				);
-				$insightContent=$template->render($data);
+					"kpis"=>$kpiData,
+					"entryWidth"=>$widthByNum[$num]
+				));
 				break;
 
 			default:
