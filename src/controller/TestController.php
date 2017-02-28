@@ -44,12 +44,24 @@ class TestController extends Singleton {
 
 		$widthByNum=array(1=>"100%",2=>"50%",3=>"33%",4=>"25%");
 
-		$template=new Template(__DIR__."/../view/insight-line.php");
+		$days=array();
+		$now=time();
+		for ($i=29; $i>=0; $i--) {
+			$t=$now-24*60*60*$i;
+			$days[]=array(
+				"y"=>date("Y",$t),
+				"m"=>date("m",$t)-1,
+				"d"=>date("d",$t)
+			);
+		}
+
+		$template=new Template(__DIR__."/../view/insight-histogram.php");
 		$insightContent=$template->render(array(
 			"uid"=>"unique",
 			"title"=>"Dummy Chart Data",
 			"kpis"=>$kpiData,
-			"entryWidth"=>$widthByNum[$num]
+			"entryWidth"=>$widthByNum[$num],
+			"days"=>$days
 		));
 
 		$template=new Template(__DIR__."/../view/insight.php");
